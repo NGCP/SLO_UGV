@@ -4,6 +4,20 @@ import datetime
 import subprocess
 import sys
 
+def setup_vehicle(configs, v_type):
+    '''Sets up self as a quadplane vehicle'''
+    if configs["vehicle_simulated"]:
+        veh = scan_ports(configs, v_type)
+    else:
+        # connect to pixhawk via MicroUSB
+        # if we switch back to using the telem2 port, use "/dev/serial0"
+        con_str = "/dev/ttyACM0"
+        veh = connect(con_str, baud=configs["baud_rate"], wait_ready=True, \
+            vehicle_class=v_type, heartbeat_timeout=5, timeout=5)
+    veh.configs = configs
+    veh.setup()
+    return veh
+
 def parse_configs(argv):
     """Parses the .json file given as the first command line argument.
     If no .json file is specified, defaults to "configs.json".

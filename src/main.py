@@ -5,7 +5,8 @@ from ugv import setup_vehicle
 def main(configs):
     '''Configure vtol and ready for mission'''
     # pylint: disable=unused-variable
-    vehicle = setup_vehicle(configs)
+    vehicle = setup_vehicle(configs, UGV)
+    vehicle.start_auto_mission()
 
 if __name__ == '__main__':
     with open('configs.json', 'r') as data:
