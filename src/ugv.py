@@ -4,7 +4,7 @@ from math import radians
 from dronekit import VehicleMode, Vehicle, LocationGlobalRelative
 from pymavlink import mavutil
 from coms import Coms
-from util import get_distance_metres, to_quaternion
+from util import get_distance_metres
 
 
 class UGV(Vehicle):

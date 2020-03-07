@@ -3,7 +3,6 @@ import json
 import datetime
 import subprocess
 import sys
-from math import cos, sin, radians, sqrt
 import shelve
 from dronekit import connect, APIException
 
@@ -19,7 +18,6 @@ def setup_vehicle(configs, v_type):
         veh = connect(con_str, baud=configs["baud_rate"], wait_ready=True, \
             vehicle_class=v_type, heartbeat_timeout=5, timeout=5)
     veh.configs = configs
-    veh.airspeed = configs['air_speed']
     veh.setup()
     return veh
 
@@ -52,24 +50,6 @@ def scan_ports(configs, v_type):
                 sys.exit(-1)
     return veh
 
-
-def to_quaternion(roll=0.0, pitch=0.0, yaw=0.0):
-    '''
-    Convert degrees to quaternions
-    '''
-    t0_val = cos(radians(yaw * 0.5))
-    t1_val = sin(radians(yaw * 0.5))
-    t2_val = cos(radians(roll * 0.5))
-    t3_val = sin(radians(roll * 0.5))
-    t4_val = cos(radians(pitch * 0.5))
-    t5_val = sin(radians(pitch * 0.5))
-
-    w_val = t0_val * t2_val * t4_val + t1_val * t3_val * t5_val
-    x_val = t0_val * t3_val * t4_val - t1_val * t2_val * t5_val
-    y_val = t0_val * t2_val * t5_val + t1_val * t3_val * t4_val
-    z_val = t1_val * t2_val * t4_val - t0_val * t3_val * t5_val
-
-    return [w_val, x_val, y_val, z_val]
 
 def parse_configs(argv):
     """Parses the .json file given as the first command line argument.
