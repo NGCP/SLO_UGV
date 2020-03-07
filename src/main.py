@@ -1,6 +1,7 @@
 '''main executable for setting up UGV'''
 import json
-from ugv import setup_vehicle
+from util import setup_vehicle
+from ugv import UGV
 
 def main(configs):
     '''Configure vtol and ready for mission'''
@@ -9,6 +10,6 @@ def main(configs):
     vehicle.start_auto_mission()
 
 if __name__ == '__main__':
-    with open('configs.json', 'r') as data:
-        main(json.load(data))
+    with open('../configs.json', 'r') as configs:
+        main(json.load(configs))
         

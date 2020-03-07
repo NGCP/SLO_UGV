@@ -1,6 +1,11 @@
 """Autonomous UGV"""
+import time
+from math import radians
 from dronekit import VehicleMode, Vehicle, LocationGlobalRelative
+from pymavlink import mavutil
 from coms import Coms
+from util import get_distance_metres, to_quaternion
+
 
 class UGV(Vehicle):
     def __init__(self, *args):
@@ -13,12 +18,12 @@ class UGV(Vehicle):
         msg = {
         "type": "connect",
         "time": 0, # This field is currently not used
-        "sid": configs['vehicle_id'],
+        "sid": self.configs['vehicle_id'],
         "tid": 0, # The ID of GCS
         "id": 0, # The ID of this message
         }
         
-        self.coms.send_till_ack(configs["mission_control_MAC"], msg, msg['id'])
+        self.coms.send_till_ack(self.configs["mission_control_MAC"], msg, msg['id'])
         return None
         
     configs = None
