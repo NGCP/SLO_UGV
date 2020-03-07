@@ -1,16 +1,29 @@
 """Autonomous UGV"""
 from dronekit import VehicleMode, Vehicle, LocationGlobalRelative
+from coms import Coms
+
 class UGV(Vehicle):
     def __init__(self, *args):
         super(UGV, self).__init__(*args)
     
     def setup(self):
-        #TODO
+        print('Initializing Coms')
+        self.coms = Coms(self.configs, self.coms_callback)
+        
+        msg = {
+        "type": "connect",
+        "time": 0, # This field is currently not used
+        "sid": configs['vehicle_id'],
+        "tid": 0, # The ID of GCS
+        "id": 0, # The ID of this message
+        }
+        
+        self.coms.send_till_ack(configs["mission_control_MAC"], msg, msg['id'])
         return None
         
     configs = None
 
-     def start_auto_mission(self):
+    def start_auto_mission(self):
         '''Arms and starts an AUTO mission loaded onto the vehicle'''
         while not self.is_armable:
             print(" Waiting for vehicle to initialise...")
@@ -46,3 +59,37 @@ class UGV(Vehicle):
     # def goto_vehicle(self):
     #     while ultraSonicDistance > 1:
 
+    def coms_callback(self, command):
+        '''callback for radio messages'''
+
+        #tuple of commands that can be executed
+        valid_commands = ("start", "load", "go_to", "return", "stop", "manual")
+        #gives us the specific command we want the drone to executre
+
+        #checking for valid command
+        if command["Type"] not in valid_commands:
+            raise Exception("Error: Unsupported status for vehicle")
+
+        #executes takeoff command to drone
+        if command["Type"] == 'start':
+            #TODO
+            pass
+        #executes land command to drone
+        
+        elif command["Type"] == 'load':
+            #TODO
+            pass
+        
+        elif command["Type"] == 'go_to':
+            #TODO
+            pass
+            self.go_to(LocationGlobalRelative(command["Body"]["Lat"], \
+                command["Body"]["Lon"], command["Body"]["Alt"]))
+        
+        elif command["Type"] == 'stop':
+            #TODO
+            pass
+        
+        elif command["Type"] == 'manual':
+            #TODO
+            pass
